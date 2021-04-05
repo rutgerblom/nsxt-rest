@@ -2,12 +2,12 @@
 - hosts: localhost
   name: ConfigureEgress.yml
   vars:
-    NsxmanagerAddress:     pod-220-nsxt-lm-1.sddc.lab                  # FQDN or IP address of your NSX Manager
-    NsxmanagerUser:        admin                                       # NSX Manager username
-    NsxmanagerPassword:    VMware1!VMware1!                            # NSX Manager password
+    NsxManagerAddress:     pod-220-nsxt-lm-1.sddc.lab                  # FQDN or IP address of your NSX Manager
+    NsxManagerUser:        admin                                       # NSX Manager username
+    NsxManagerPassword:    VMware1!VMware1!                            # NSX Manager password
     Tier0:                 T0-Gateway-01                               # Name of the Tier-0 Gateway
-    LocalAs:               65001                                       # AS on the NSX side
-    RemoteAs:              65000                                       # AS on the physical router side
+    LocalAs:               65001                                       # ASN on the NSX side
+    RemoteAs:              65000                                       # ASN on the physical router side
     Prefix1:               any                                         # Name of the "Any" prefix
     Prefix2:               default-route                               # Name of the "Default Route" prefix                  
     RouteMapIn:            rm-in                                       # Name of the route map that is applied to the "In" filter
@@ -20,9 +20,9 @@
   tasks:
     - name: Create prefix lists for "Any" and "Default Route"
       nsxt_rest:
-        hostname: "{{ NsxmanagerAddress }}"
-        username: "{{ NsxmanagerUser }}"
-        password: "{{ NsxmanagerPassword }}"
+        hostname: "{{ NsxManagerAddress }}"
+        username: "{{ NsxManagerUser }}"
+        password: "{{ NsxManagerPassword }}"
         validate_certs: false
         method: patch
         path: "/policy/api/v1/infra/tier-0s/{{ Tier0 }}/prefix-lists/{{ item.name }}"
@@ -41,9 +41,9 @@
 
     - name: Create route map for the "In" filter
       nsxt_rest:
-        hostname: "{{ NsxmanagerAddress }}"
-        username: "{{ NsxmanagerUser }}"
-        password: "{{ NsxmanagerPassword }}"
+        hostname: "{{ NsxManagerAddress }}"
+        username: "{{ NsxManagerUser }}"
+        password: "{{ NsxManagerPassword }}"
         validate_certs: false
         method: patch
         path: "/policy/api/v1/infra/tier-0s/{{ Tier0 }}/route-maps/{{ RouteMapIn }}"
@@ -73,9 +73,9 @@
 
     - name: Create route map for the "Out" filter 
       nsxt_rest:
-        hostname: "{{ NsxmanagerAddress }}"
-        username: "{{ NsxmanagerUser }}"
-        password: "{{ NsxmanagerPassword }}"
+        hostname: "{{ NsxManagerAddress }}"
+        username: "{{ NsxManagerUser }}"
+        password: "{{ NsxManagerPassword }}"
         validate_certs: false
         method: patch
         path: "/policy/api/v1/infra/tier-0s/{{ Tier0 }}/route-maps/{{ RouteMapOut }}"
@@ -97,9 +97,9 @@
 
     - name: Add the filters to the BGP neighbor entries
       nsxt_rest:
-        hostname: "{{ NsxmanagerAddress }}"
-        username: "{{ NsxmanagerUser }}"
-        password: "{{ NsxmanagerPassword }}"
+        hostname: "{{ NsxManagerAddress }}"
+        username: "{{ NsxManagerUser }}"
+        password: "{{ NsxManagerPassword }}"
         validate_certs: false
         method: patch
         path: "/policy/api/v1/infra/tier-0s/{{ Tier0 }}/locale-services/{{ Tier0 }}_Locale_Services/bgp/neighbors/{{ item.neighbor }}"
